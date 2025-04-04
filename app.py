@@ -100,6 +100,8 @@ def BNN_predictor(data_pre):
     predictive = pyro.infer.Predictive(model, guide=guide, num_samples=PREIDCTIVE_SAMPLES)
     # Load the model
     pyro.clear_param_store()
+    from functools import partial
+    torch.load = partial(torch.load, weights_only=False)
     pyro.get_param_store().load(model_path)
     pyro.module('model', model, update_module_params=True)
     # Activate the model
