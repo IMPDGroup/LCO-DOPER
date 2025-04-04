@@ -1,3 +1,9 @@
-# LCO-DOPER
+# Unraveling Doping Effects in LaCoO3 via Machine Learning-Accelerated First-Principles Simulations
 
-LCO-DOPER provides insights into the influence of various doping elements on LaCoO3 (LCO), assisting materials scientists and industry professionals in optimizing composition and enhancing material performance.
+![Try it online](https://lco-doper.streamlit.app/)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1234567.svg)](https://doi.org/10.5281/zenodo.1234567)
+
+<!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1234567.svg)](https://doi.org/10.5281/zenodo.1234567) -->
+
+## Features
