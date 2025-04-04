@@ -383,7 +383,12 @@ def main():
         # Make the dopant concentration columns numeric
         data_dis['Dopant Concentration A (at.%)'] = pd.to_numeric(data_dis['Dopant Concentration A (at.%)'])
         data_dis['Dopant Concentration B (at.%)'] = pd.to_numeric(data_dis['Dopant Concentration B (at.%)'])
-        
+        data_dis['Oxygen Vacancy Concentration (at.%)'] = pd.to_numeric(data_dis['Oxygen Vacancy Concentration (at.%)'])
+        data_dis['Temperature (K)'] = pd.to_numeric(data_dis['Temperature (K)'])
+        data_dis['F (eV/atom)'] = pd.to_numeric(data_dis['F (eV/atom)'])
+        data_dis['Lattice Distortion (%)'] = pd.to_numeric(data_dis['Lattice Distortion (%)'])
+        data_dis['Atomic Distortion (Å)'] = pd.to_numeric(data_dis['Atomic Distortion (Å)'])
+        data_dis['D (cm^2/s)'] = pd.to_numeric(data_dis['D (cm^2/s)'])
         
         # Set 2 columns for the heatmaps of F (eV/atom) and D (cm^2/s)
         st.subheader('Predicted Data Visualization:')
