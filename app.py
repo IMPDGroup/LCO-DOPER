@@ -236,7 +236,7 @@ def main():
         'Report a bug': 'mailto:gliu4@wpi.edu',
         'About': '# LCO-DOPER'
         '\n**AI Powered Materials Innovation**  '
-        '\n\n*Created by Guangchen Liu (gliu4@wpi.edu)*  '
+        '\n\n*Developed by Guangchen Liu (gliu4@wpi.edu)*  '
         '\n*IMPD Group, Worcester Polytechnic Institute, MA USA*',
     })
     
@@ -519,7 +519,7 @@ def main():
     st.markdown(
     '''
     <div style='color: rgba(0, 0, 0, 0.4); font-weight: bold;'>
-        Copyright © 2025 Guangchen Liu. All rights reserved.
+        Copyright © 2025 DOPED-LCO | Developed by Guangchen Liu. All rights reserved.
     </div>
     ''',
     unsafe_allow_html=True
