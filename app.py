@@ -353,7 +353,7 @@ def main():
         st.divider()
         st.write(f'Temperature: {T} K')
         if T < 1000:
-            st.warning('The model was trained on data from 1500–2500 K, the prediction of diffusivity and conductivity at lower temperatures may not be reliable at lower temperatures.')
+            st.warning('Warning: The model was trained on data above 1500 K, the prediction of diffusivity and conductivity may not be reliable at lower temperatures.')
     
     # Once the user dopant selection and system conditions changed, reset the session state for showing predicted data and visualization
     input_signature = json.dumps({
@@ -381,7 +381,8 @@ def main():
     st.divider()
     if st.button('Predict', type='primary', use_container_width=True):
         if dopant_A == 'None' and dopant_B == 'None':
-            st.warning('Please select at least one dopant!')
+            # st.warning('Please select at least one dopant!')
+            st.error('Error: Please select at least one dopant!')
             st.stop()
         # Show a loading spinner
         with st.spinner('Predicting... Please wait — this may take a few seconds to a few minutes depending on your input size and complexity.'):
