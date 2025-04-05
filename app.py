@@ -1,3 +1,5 @@
+import json
+import hashlib
 import datetime
 import pandas as pd
 import numpy as np
@@ -91,7 +93,7 @@ def BNN_predictor(data_pre):
     # Define variational guide
     guide = pyro.infer.autoguide.AutoDiagonalNormal(model)
     # Optimizer
-    optimizer = pyro.optim.Adam({"lr": LR})
+    optimizer = pyro.optim.Adam({'lr': LR})
     # Loss function
     loss_func = pyro.infer.Trace_ELBO()
     # Stochastic Variational Inference
@@ -231,11 +233,11 @@ def main():
         page_icon=':material/apps:', 
         menu_items={
         'Get Help': 'https://github.com/aguang5241/LCO-DOPER',
-        'Report a bug': "mailto:gliu4@wpi.edu",
-        'About': "# LCO-DOPER"
-        "\n**AI Powered Materials Innovation**  "
-        "\n\n*Created by Guangchen Liu (gliu4@wpi.edu)*  "
-        "\n*IMPD Group, Worcester Polytechnic Institute, MA USA*",
+        'Report a bug': 'mailto:gliu4@wpi.edu',
+        'About': '# LCO-DOPER'
+        '\n**AI Powered Materials Innovation**  '
+        '\n\n*Created by Guangchen Liu (gliu4@wpi.edu)*  '
+        '\n*IMPD Group, Worcester Polytechnic Institute, MA USA*',
     })
     
     # Add app logo to the sidebar
@@ -347,36 +349,86 @@ def main():
         # Show the selected temperature
         st.divider()
         st.write(f'Temperature: {T} K')
+    
+    # Once the user dopant selection and system conditions changed, reset the session state for showing predicted data and visualization
+    input_signature = json.dumps({
+        "dopant_A": dopant_A,
+        "dopant_A_conc": dopant_A_conc,
+        "dopant_B": dopant_B,
+        "dopant_B_conc": dopant_B_conc,
+        "oxygen_vacancy_concentration": oxygen_vacancy_concentration,
+        "T": T,
+    }, sort_keys=True)
+
+    # Create a hash of the input state
+    input_hash = hashlib.md5(input_signature.encode()).hexdigest()
+
+    # Step 2: Compare with the last stored input hash
+    if 'last_input_hash' not in st.session_state:
+        st.session_state['last_input_hash'] = input_hash
+    else:
+        if st.session_state['last_input_hash'] != input_hash:
+            # Inputs have changed — reset prediction states
+            st.session_state['data_pred_dis'] = None
+            st.session_state['last_input_hash'] = input_hash
 
     # Add a button to submit the selections
     st.divider()
     if st.button('Predict', type='primary', use_container_width=True):
-        # Get the dopant data
-        data_pre_BNN = get_dopant_data(dopant_A, dopant_B, dopant_A_conc, dopant_B_conc, oxygen_vacancy_concentration, T)
-        # Predict the data using BNN
-        data_pred_BNN = BNN_predictor(data_pre_BNN)
-        # Predict the data using ANN
-        data_pred_ANN = ANN_predictor(data_pred_BNN)
-        # Process the predicted data for display
-        st.session_state['data_pred_dis'] = data_display(data_pred_ANN)
+        if dopant_A == 'None' and dopant_B == 'None':
+            st.warning('Please select at least one dopant!')
+            st.stop()
+        # Show a loading spinner
+        with st.spinner('Predicting...'):
+            # Get the dopant data
+            data_pre_BNN = get_dopant_data(dopant_A, dopant_B, dopant_A_conc, dopant_B_conc, oxygen_vacancy_concentration, T)
+            # Predict the data using BNN
+            data_pred_BNN = BNN_predictor(data_pre_BNN)
+            # Predict the data using ANN
+            data_pred_ANN = ANN_predictor(data_pred_BNN)
+            # Process the predicted data for display
+            st.session_state['data_pred_dis'] = data_display(data_pred_ANN)
     
     # Show the predicted data
-    if 'data_pred_dis' in st.session_state:
+    if st.session_state.get('data_pred_dis') is not None:
         data_dis = st.session_state['data_pred_dis']
+        
+        # Make the dopant concentration columns numeric
+        data_dis['Dopant Concentration A (at.%)'] = pd.to_numeric(data_dis['Dopant Concentration A (at.%)'])
+        data_dis['Dopant Concentration B (at.%)'] = pd.to_numeric(data_dis['Dopant Concentration B (at.%)'])
+        data_dis['Oxygen Vacancy Concentration (at.%)'] = pd.to_numeric(data_dis['Oxygen Vacancy Concentration (at.%)'])
+        data_dis['Temperature (K)'] = pd.to_numeric(data_dis['Temperature (K)'])
+        data_dis['F (eV/atom)'] = pd.to_numeric(data_dis['F (eV/atom)'])
+        data_dis['Lattice Distortion (%)'] = pd.to_numeric(data_dis['Lattice Distortion (%)'])
+        data_dis['Atomic Distortion (Å)'] = pd.to_numeric(data_dis['Atomic Distortion (Å)'])
+        data_dis['D (cm^2/s)'] = pd.to_numeric(data_dis['D (cm^2/s)'])
+        
+        # Set the number format
+        data_dis['Dopant Concentration A (at.%)'] = data_dis['Dopant Concentration A (at.%)'].apply(lambda x: f'{x:.2f}')
+        data_dis['Dopant Concentration B (at.%)'] = data_dis['Dopant Concentration B (at.%)'].apply(lambda x: f'{x:.2f}')
+        data_dis['Oxygen Vacancy Concentration (at.%)'] = data_dis['Oxygen Vacancy Concentration (at.%)'].apply(lambda x: f'{x:.2f}')
+        data_dis['Temperature (K)'] = data_dis['Temperature (K)'].apply(lambda x: f'{x:d}')
+        data_dis['F (eV/atom)'] = data_dis['F (eV/atom)'].apply(lambda x: f'{x:.4f}')
+        data_dis['Lattice Distortion (%)'] = data_dis['Lattice Distortion (%)'].apply(lambda x: f'{x:.2f}')
+        data_dis['Atomic Distortion (Å)'] = data_dis['Atomic Distortion (Å)'].apply(lambda x: f'{x:.4f}')
+        data_dis['D (cm^2/s)'] = data_dis['D (cm^2/s)'].apply(lambda x: f'{x:.4e}')
+
         # Show the predicted data
-        if st.checkbox('Show predicted data', value=False):
+        if st.checkbox('Show Predicted Data', value=False):
             st.subheader('Predicted Data:')
-            st.write(st.session_state['data_pred_dis'])
+            st.dataframe(data_dis, use_container_width=True)
+
             # Create a time stamp for the file name
             now = datetime.datetime.now()
-            timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
+            timestamp = now.strftime('%Y-%m-%d_%H-%M-%S')
 
+            # Add a download button for the predicted data
             st.download_button(
-                label='Download predicted data',
+                label='Download Predicted Data',
                 data=st.session_state['data_pred_dis'].to_csv(index=False),
                 file_name='LCO-DOPER_' + timestamp + '.csv',
                 mime='text/csv',
-                icon=":material/download:"
+                icon=':material/download:'
             )
             st.divider()
 
@@ -402,11 +454,12 @@ def main():
             # Create the Plotly heatmap
             fig = px.imshow(
                 heatmap_F,
-                color_continuous_scale="Viridis",
-                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)'),
+                color_continuous_scale='Viridis',
+                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='F (eV/atom)'),
             )
             fig.update_coloraxes(
-                colorbar_tickformat=".2f"
+                colorbar_tickformat='.2f',
+                colorbar_title_text='',
             )
             # Display in Streamlit
             st.plotly_chart(fig, use_container_width=True)
@@ -419,11 +472,12 @@ def main():
             # Create the Plotly heatmap
             fig = px.imshow(
                 heatmap_D,
-                color_continuous_scale="Viridis",
-                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)'),
+                color_continuous_scale='Viridis',
+                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='D (cm^2/s)')
             )
             fig.update_coloraxes(
-                colorbar_tickformat=".2e"
+                colorbar_tickformat='.2e',
+                colorbar_title_text='',
             )
             # Display in Streamlit
             st.plotly_chart(fig, use_container_width=True)
@@ -439,11 +493,12 @@ def main():
             # Create the Plotly heatmap
             fig = px.imshow(
                 heatmap_lattice,
-                color_continuous_scale="Viridis",
-                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)'),
+                color_continuous_scale='Viridis',
+                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='Lattice Distortion (%)'),
             )
             fig.update_coloraxes(
-                colorbar_tickformat=".2f"
+                colorbar_tickformat='.2f',
+                colorbar_title_text='',
             )
             # Display in Streamlit
             st.plotly_chart(fig, use_container_width=True)
@@ -456,18 +511,26 @@ def main():
             # Create the Plotly heatmap
             fig = px.imshow(
                 heatmap_atomic,
-                color_continuous_scale="Viridis",
-                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)'),
+                color_continuous_scale='Viridis',
+                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='Atomic Distortion (Å)'),
             )
             fig.update_coloraxes(
-                colorbar_tickformat=".2f"
+                colorbar_tickformat='.2f',
+                colorbar_title_text='',
             )
             # Display in Streamlit
             st.plotly_chart(fig, use_container_width=True)
 
     # Add a footer
     st.divider()
-    st.markdown('**Copyright © 2025 Guangchen Liu. All rights reserved.**')
+    st.markdown(
+    '''
+    <div style='color: rgba(0, 0, 0, 0.4); font-weight: bold;'>
+        Copyright © 2025 Guangchen Liu. All rights reserved.
+    </div>
+    ''',
+    unsafe_allow_html=True
+    )
 
 
 if __name__ == '__main__':

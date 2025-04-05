@@ -29,7 +29,7 @@ An application for analyzing dopant effects on LaCoO3 (LCO), supporting composit
     - Lattice Distortion (%)
     - Atomic Distance (Å)
 
-4. **Download Results**: After the prediction is complete, you can download the results in CSV format by clicking the `Download predicted data` button. The results will include the predicted properties for the selected dopants and conditions.
+4. **Display & Download Results**: After the prediction is complete, you can see the results by checking the `Show Predicted Data` checkbox. A table will appear with the predicted properties for the selected dopants and conditions. You can also download the results in CSV format by clicking the `Download Predicted Data` button.
 
 5. **Visualize Results**: The predicted results will be displayed in the `Predicted Data Visualization:` section, where you can visualize the predicted properties with interactive plots. The plots will show the relationship between the selected dopants, their concentrations, and the predicted properties.
 
