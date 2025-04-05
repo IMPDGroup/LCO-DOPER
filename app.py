@@ -379,7 +379,7 @@ def main():
             st.warning('Please select at least one dopant!')
             st.stop()
         # Show a loading spinner
-        with st.spinner('Predicting...'):
+        with st.spinner('Predicting... Please wait — this may take a few seconds to a few minutes depending on your input size and complexity.'):
             # Get the dopant data
             data_pre_BNN = get_dopant_data(dopant_A, dopant_B, dopant_A_conc, dopant_B_conc, oxygen_vacancy_concentration, T)
             # Predict the data using BNN
@@ -402,21 +402,24 @@ def main():
         data_dis['Lattice Distortion (%)'] = pd.to_numeric(data_dis['Lattice Distortion (%)'])
         data_dis['Atomic Distortion (Å)'] = pd.to_numeric(data_dis['Atomic Distortion (Å)'])
         data_dis['D (cm^2/s)'] = pd.to_numeric(data_dis['D (cm^2/s)'])
-        
-        # Set the number format
-        data_dis['Dopant Concentration A (at.%)'] = data_dis['Dopant Concentration A (at.%)'].apply(lambda x: f'{x:.2f}')
-        data_dis['Dopant Concentration B (at.%)'] = data_dis['Dopant Concentration B (at.%)'].apply(lambda x: f'{x:.2f}')
-        data_dis['Oxygen Vacancy Concentration (at.%)'] = data_dis['Oxygen Vacancy Concentration (at.%)'].apply(lambda x: f'{x:.2f}')
-        data_dis['Temperature (K)'] = data_dis['Temperature (K)'].apply(lambda x: f'{x:d}')
-        data_dis['F (eV/atom)'] = data_dis['F (eV/atom)'].apply(lambda x: f'{x:.4f}')
-        data_dis['Lattice Distortion (%)'] = data_dis['Lattice Distortion (%)'].apply(lambda x: f'{x:.2f}')
-        data_dis['Atomic Distortion (Å)'] = data_dis['Atomic Distortion (Å)'].apply(lambda x: f'{x:.4f}')
-        data_dis['D (cm^2/s)'] = data_dis['D (cm^2/s)'].apply(lambda x: f'{x:.4e}')
 
         # Show the predicted data
         if st.checkbox('Show Predicted Data', value=False):
             st.subheader('Predicted Data:')
-            st.dataframe(data_dis, use_container_width=True)
+            st.dataframe(
+                data_dis, 
+                use_container_width=True,
+                column_config={
+                'Dopant Concentration A (at.%)': st.column_config.NumberColumn(format="%.2f"),
+                'Dopant Concentration B (at.%)': st.column_config.NumberColumn(format="%.2f"),
+                'Oxygen Vacancy Concentration (at.%)': st.column_config.NumberColumn(format="%.2f"),
+                'Temperature (K)': st.column_config.NumberColumn(format="%d"),
+                'F (eV/atom)': st.column_config.NumberColumn(format="%.4f"),
+                'Lattice Distortion (%)': st.column_config.NumberColumn(format="%.2f"),
+                'Atomic Distortion (Å)': st.column_config.NumberColumn(format="%.4f"),
+                'D (cm^2/s)': st.column_config.NumberColumn(format="%.4e"),
+                },
+                )
 
             # Create a time stamp for the file name
             now = datetime.datetime.now()
@@ -431,16 +434,6 @@ def main():
                 icon=':material/download:'
             )
             st.divider()
-
-        # Make the dopant concentration columns numeric
-        data_dis['Dopant Concentration A (at.%)'] = pd.to_numeric(data_dis['Dopant Concentration A (at.%)'])
-        data_dis['Dopant Concentration B (at.%)'] = pd.to_numeric(data_dis['Dopant Concentration B (at.%)'])
-        data_dis['Oxygen Vacancy Concentration (at.%)'] = pd.to_numeric(data_dis['Oxygen Vacancy Concentration (at.%)'])
-        data_dis['Temperature (K)'] = pd.to_numeric(data_dis['Temperature (K)'])
-        data_dis['F (eV/atom)'] = pd.to_numeric(data_dis['F (eV/atom)'])
-        data_dis['Lattice Distortion (%)'] = pd.to_numeric(data_dis['Lattice Distortion (%)'])
-        data_dis['Atomic Distortion (Å)'] = pd.to_numeric(data_dis['Atomic Distortion (Å)'])
-        data_dis['D (cm^2/s)'] = pd.to_numeric(data_dis['D (cm^2/s)'])
         
         # Set 2 columns for the heatmaps of F (eV/atom) and D (cm^2/s)
         st.subheader('Predicted Data Visualization:')
