@@ -191,10 +191,12 @@ def ANN_predictor(data_pred_BNN):
    
     # Predict the data
     with torch.no_grad():
+        model.eval()
         y_pre = model(x_pre)
         y_pre = y_scaler.inverse_transform(y_pre)
     data_pred_ANN = data_pred_BNN.copy()
     data_pred_ANN['D'] = y_pre
+    print(data_pred_ANN.head())
 
     return data_pred_ANN
 
