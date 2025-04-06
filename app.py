@@ -386,14 +386,21 @@ def main():
             st.stop()
         # Show a loading spinner
         with st.spinner('Predicting... Please wait — this may take a few seconds to a few minutes depending on your input size and complexity.'):
-            # Get the dopant data
-            data_pre_BNN = get_dopant_data(dopant_A, dopant_B, dopant_A_conc, dopant_B_conc, oxygen_vacancy_concentration, T)
-            # Predict the data using BNN
-            data_pred_BNN = BNN_predictor(data_pre_BNN)
-            # Predict the data using ANN
-            data_pred_ANN = ANN_predictor(data_pred_BNN)
-            # Process the predicted data for display
-            st.session_state['data_pred_dis'] = data_display(data_pred_ANN)
+            try:
+                # Get the dopant data
+                data_pre_BNN = get_dopant_data(dopant_A, dopant_B, dopant_A_conc, dopant_B_conc, oxygen_vacancy_concentration, T)
+                # Predict the data using BNN
+                data_pred_BNN = BNN_predictor(data_pre_BNN)
+                # Predict the data using ANN
+                data_pred_ANN = ANN_predictor(data_pred_BNN)
+                # Process the predicted data for display
+                st.session_state['data_pred_dis'] = data_display(data_pred_ANN)
+            except Exception as e:
+                # Clear previous predictions
+                st.session_state['data_pred_dis'] = None
+                # Show user-friendly error message
+                st.error('😢 Sorry, something unexpected happened. Please try again.')
+                st.stop()
     
     # Show the predicted data
     if st.session_state.get('data_pred_dis') is not None:
