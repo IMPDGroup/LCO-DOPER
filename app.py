@@ -196,7 +196,6 @@ def ANN_predictor(data_pred_BNN):
         y_pre = y_scaler.inverse_transform(y_pre)
     data_pred_ANN = data_pred_BNN.copy()
     data_pred_ANN['D'] = y_pre
-    print(data_pred_ANN.head())
 
     return data_pred_ANN
 
