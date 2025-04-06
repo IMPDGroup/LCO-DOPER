@@ -411,12 +411,20 @@ def main():
         # Create a heatmap for F (eV/atom)
         with st.container(border=True):
             # Create a heatmap for F (eV/atom)
-            heatmap_F = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='F (eV/atom)')
+            if dopant_A != 'None' and dopant_B != 'None':
+                heatmap_F = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='F (eV/atom)')
+                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='F (eV/atom)')
+            elif dopant_A != 'None' and dopant_B == 'None':
+                heatmap_F = data_dis.pivot_table(index='Dopant Concentration B (at.%)', columns='Dopant Concentration A (at.%)', values='F (eV/atom)')
+                labels=dict(x=f'{dopant_A} (at.%)', y='', color='F (eV/atom)')
+            elif dopant_A == 'None' and dopant_B != 'None':
+                heatmap_F = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='F (eV/atom)')
+                labels=dict(x=f'{dopant_B} (at.%)', y='', color='F (eV/atom)')
             # Create the Plotly heatmap
             fig = px.imshow(
                 heatmap_F,
                 color_continuous_scale='Viridis',
-                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='F (eV/atom)'),
+                labels=labels,
             )
             fig.update_coloraxes(
                 colorbar_tickformat='.2f',
@@ -424,59 +432,82 @@ def main():
             )
             # Display in Streamlit
             st.plotly_chart(fig, use_container_width=True)
-    
+
             with st.expander('**Formation Energy Trends Across Dopant Sites** (Click to Expand)', expanded=False):
-                # Set 2 columns for A and B site dopant
-                col5, col6 = st.columns(2, border=True, gap='medium')
-                with col5:
-                    # Plot the F (eV/atom) vs B-site dopant concentration
-                    dopant_A_conc_filter = st.slider(
-                        label=f'{dopant_A} (at.%):',
-                        min_value=dopant_A_conc[0],
-                        max_value=dopant_A_conc[1],
-                        value=dopant_A_conc[0],
-                        step=1,
-                        key='dopant_A_conc_filter_for_F_A'
-                    )
-                    data_dis_filter = data_dis[data_dis['Dopant Concentration A (at.%)'] == dopant_A_conc_filter]
-                    # # Sort the data by B-site dopant concentration
-                    # data_dis_filter = data_dis_filter.sort_values(by='Dopant Concentration B (at.%)')
-
-                    fig = px.scatter(
-                        data_dis_filter,
-                        x='Dopant Concentration B (at.%)',
-                        y='F (eV/atom)',
-                        error_y='F std (eV/atom)',
-                    )
-                    fig.update_layout(
-                        xaxis_title=f'{dopant_B} (at.%)',
-                        yaxis_title='Forming Energy (eV/atom)',
-                        
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
+                if dopant_A != 'None' and dopant_B != 'None':
+                    # Set 2 columns for A and B site dopant
+                    col5, col6 = st.columns(2, border=True, gap='medium')
+                    with col5:
+                        # Plot the F (eV/atom) vs B-site dopant concentration
+                        dopant_A_conc_filter = st.slider(
+                            label=f'{dopant_A} (at.%):',
+                            min_value=dopant_A_conc[0],
+                            max_value=dopant_A_conc[1],
+                            value=dopant_A_conc[0],
+                            step=1,
+                            key='dopant_A_conc_filter_for_F_A'
+                        )
+                        data_dis_filter = data_dis[data_dis['Dopant Concentration A (at.%)'] == dopant_A_conc_filter]
+                        fig = px.scatter(
+                            data_dis_filter,
+                            x='Dopant Concentration B (at.%)',
+                            y='F (eV/atom)',
+                            error_y='F std (eV/atom)',
+                        )
+                        fig.update_layout(
+                            xaxis_title=f'{dopant_B} (at.%)',
+                            yaxis_title='Forming Energy (eV/atom)',
+                            
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                    
+                    with col6:
+                        # Plot the F (eV/atom) vs A-site dopant concentration
+                        dopant_B_conc_filter = st.slider(
+                            label=f'{dopant_B} (at.%):',
+                            min_value=dopant_B_conc[0],
+                            max_value=dopant_B_conc[1],
+                            value=dopant_B_conc[0],
+                            step=1,
+                            key='dopant_B_conc_filter_for_F_B'
+                        )
+                        data_dis_filter = data_dis[data_dis['Dopant Concentration B (at.%)'] == dopant_B_conc_filter]
+                        fig = px.scatter(
+                            data_dis_filter,
+                            x='Dopant Concentration A (at.%)',
+                            y='F (eV/atom)',
+                            error_y='F std (eV/atom)',
+                        )
+                        fig.update_layout(
+                            xaxis_title=f'{dopant_A} (at.%)',
+                            yaxis_title='Forming Energy (eV/atom)',
+                            
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
                 
-                with col6:
-                    # Plot the F (eV/atom) vs A-site dopant concentration
-                    dopant_B_conc_filter = st.slider(
-                        label=f'{dopant_B} (at.%):',
-                        min_value=dopant_B_conc[0],
-                        max_value=dopant_B_conc[1],
-                        value=dopant_B_conc[0],
-                        step=1,
-                        key='dopant_B_conc_filter_for_F_B'
-                    )
-                    data_dis_filter = data_dis[data_dis['Dopant Concentration B (at.%)'] == dopant_B_conc_filter]
-                    # # Sort the data by A-site dopant concentration
-                    # data_dis_filter = data_dis_filter.sort_values(by='Dopant Concentration A (at.%)')
-
+                elif dopant_A != 'None' and dopant_B == 'None':
                     fig = px.scatter(
-                        data_dis_filter,
+                        data_dis,
                         x='Dopant Concentration A (at.%)',
                         y='F (eV/atom)',
                         error_y='F std (eV/atom)',
                     )
                     fig.update_layout(
                         xaxis_title=f'{dopant_A} (at.%)',
+                        yaxis_title='Forming Energy (eV/atom)',
+                        
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                
+                elif dopant_A == 'None' and dopant_B != 'None':
+                    fig = px.scatter(
+                        data_dis,
+                        x='Dopant Concentration B (at.%)',
+                        y='F (eV/atom)',
+                        error_y='F std (eV/atom)',
+                    )
+                    fig.update_layout(
+                        xaxis_title=f'{dopant_B} (at.%)',
                         yaxis_title='Forming Energy (eV/atom)',
                         
                     )
@@ -489,12 +520,20 @@ def main():
             with col7:
                 st.markdown('**Lattice Distortion (%):**')
                 # Create a heatmap for lattice distortion
-                heatmap_lattice = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='Lattice Distortion (%)')
+                if dopant_A != 'None' and dopant_B != 'None':
+                    heatmap_lattice = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='Lattice Distortion (%)')
+                    labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='Lattice Distortion (%)')
+                elif dopant_A != 'None' and dopant_B == 'None':
+                    heatmap_lattice = data_dis.pivot_table(index='Dopant Concentration B (at.%)', columns='Dopant Concentration A (at.%)', values='Lattice Distortion (%)')
+                    labels=dict(x=f'{dopant_A} (at.%)', y='', color='Lattice Distortion (%)')
+                elif dopant_A == 'None' and dopant_B != 'None':
+                    heatmap_lattice = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='Lattice Distortion (%)')
+                    labels=dict(x=f'{dopant_B} (at.%)', y='', color='Lattice Distortion (%)')
                 # Create the Plotly heatmap
                 fig = px.imshow(
                     heatmap_lattice,
                     color_continuous_scale='Viridis',
-                    labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='Lattice Distortion (%)'),
+                    labels=labels,
                 )
                 fig.update_coloraxes(
                     colorbar_tickformat='.2f',
@@ -502,15 +541,24 @@ def main():
                 )
                 # Display in Streamlit
                 st.plotly_chart(fig, use_container_width=True)
+            
             with col8:
                 st.markdown('**Atomic Distortion (Å):**')
                 # Create a heatmap for atomic distortion
-                heatmap_atomic = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='Atomic Distortion (Å)')
+                if dopant_A != 'None' and dopant_B != 'None':
+                    heatmap_atomic = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='Atomic Distortion (Å)')
+                    labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='Atomic Distortion (Å)')
+                elif dopant_A != 'None' and dopant_B == 'None':
+                    heatmap_atomic = data_dis.pivot_table(index='Dopant Concentration B (at.%)', columns='Dopant Concentration A (at.%)', values='Atomic Distortion (Å)')
+                    labels=dict(x=f'{dopant_A} (at.%)', y='', color='Atomic Distortion (Å)')
+                elif dopant_A == 'None' and dopant_B != 'None':
+                    heatmap_atomic = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='Atomic Distortion (Å)')
+                    labels=dict(x=f'{dopant_B} (at.%)', y='', color='Atomic Distortion (Å)')
                 # Create the Plotly heatmap
                 fig = px.imshow(
                     heatmap_atomic,
                     color_continuous_scale='Viridis',
-                    labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='Atomic Distortion (Å)'),
+                    labels=labels,
                 )
                 fig.update_coloraxes(
                     colorbar_tickformat='.2f',
@@ -520,106 +568,160 @@ def main():
                 st.plotly_chart(fig, use_container_width=True)
             
             with st.expander('**Lattice Distortion Trends Across Dopant Sites** (Click to Expand)', expanded=False):
-                # Set 2 columns for A and B site dopant
-                col9, col10 = st.columns(2, border=True, gap='medium')
-                with col9:
-                    # Plot the lattice distortion vs B-site dopant concentration
-                    dopant_A_conc_filter = st.slider(
-                        label=f'{dopant_A} (at.%):',
-                        min_value=dopant_A_conc[0],
-                        max_value=dopant_A_conc[1],
-                        value=dopant_A_conc[0],
-                        step=1,
-                        key='dopant_A_conc_filter_for_lattice_A'
-                    )
-                    data_dis_filter = data_dis[data_dis['Dopant Concentration A (at.%)'] == dopant_A_conc_filter]
-
-                    fig = px.scatter(
-                        data_dis_filter,
-                        x='Dopant Concentration B (at.%)',
-                        y='Lattice Distortion (%)',
-                        error_y='Lattice Distortion std (%)',
-                    )
-                    fig.update_layout(
-                        xaxis_title=f'{dopant_B} (at.%)',
-                        yaxis_title='Lattice Distortion (%)',
-                        
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
+                if dopant_A != 'None' and dopant_B != 'None':
+                    # Set 2 columns for A and B site dopant
+                    col9, col10 = st.columns(2, border=True, gap='medium')
+                    with col9:
+                        # Plot the lattice distortion vs B-site dopant concentration
+                        dopant_A_conc_filter = st.slider(
+                            label=f'{dopant_A} (at.%):',
+                            min_value=dopant_A_conc[0],
+                            max_value=dopant_A_conc[1],
+                            value=dopant_A_conc[0],
+                            step=1,
+                            key='dopant_A_conc_filter_for_lattice_A'
+                        )
+                        data_dis_filter = data_dis[data_dis['Dopant Concentration A (at.%)'] == dopant_A_conc_filter]
+                        fig = px.scatter(
+                            data_dis_filter,
+                            x='Dopant Concentration B (at.%)',
+                            y='Lattice Distortion (%)',
+                            error_y='Lattice Distortion std (%)',
+                        )
+                        fig.update_layout(
+                            xaxis_title=f'{dopant_B} (at.%)',
+                            yaxis_title='Lattice Distortion (%)',
+                            
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                    
+                    with col10:
+                        # Plot the lattice distortion vs A-site dopant concentration
+                        dopant_B_conc_filter = st.slider(
+                            label=f'{dopant_B} (at.%):',
+                            min_value=dopant_B_conc[0],
+                            max_value=dopant_B_conc[1],
+                            value=dopant_B_conc[0],
+                            step=1,
+                            key='dopant_B_conc_filter_for_lattice_B'
+                        )
+                        data_dis_filter = data_dis[data_dis['Dopant Concentration B (at.%)'] == dopant_B_conc_filter]
+                        fig = px.scatter(
+                            data_dis_filter,
+                            x='Dopant Concentration A (at.%)',
+                            y='Lattice Distortion (%)',
+                            error_y='Lattice Distortion std (%)',
+                        )
+                        fig.update_layout(
+                            xaxis_title=f'{dopant_A} (at.%)',
+                            yaxis_title='Lattice Distortion (%)',
+                            
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
                 
-                with col10:
-                    # Plot the lattice distortion vs A-site dopant concentration
-                    dopant_B_conc_filter = st.slider(
-                        label=f'{dopant_B} (at.%):',
-                        min_value=dopant_B_conc[0],
-                        max_value=dopant_B_conc[1],
-                        value=dopant_B_conc[0],
-                        step=1,
-                        key='dopant_B_conc_filter_for_lattice_B'
-                    )
-                    data_dis_filter = data_dis[data_dis['Dopant Concentration B (at.%)'] == dopant_B_conc_filter]
-
+                elif dopant_A != 'None' and dopant_B == 'None':
                     fig = px.scatter(
-                        data_dis_filter,
+                        data_dis,
                         x='Dopant Concentration A (at.%)',
                         y='Lattice Distortion (%)',
                         error_y='Lattice Distortion std (%)',
                     )
                     fig.update_layout(
                         xaxis_title=f'{dopant_A} (at.%)',
+                        yaxis_title='Lattice Distortion (%)',
+                        
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                
+                elif dopant_A == 'None' and dopant_B != 'None':
+                    fig = px.scatter(
+                        data_dis,
+                        x='Dopant Concentration B (at.%)',
+                        y='Lattice Distortion (%)',
+                        error_y='Lattice Distortion std (%)',
+                    )
+                    fig.update_layout(
+                        xaxis_title=f'{dopant_B} (at.%)',
                         yaxis_title='Lattice Distortion (%)',
                         
                     )
                     st.plotly_chart(fig, use_container_width=True)
 
             with st.expander('**Atomic Distortion Trends Across Dopant Sites** (Click to Expand)', expanded=False):
-                # Set 2 columns for A and B site dopant
-                col11, col12 = st.columns(2, border=True, gap='medium')
-                with col11:
-                    # Plot the atomic distortion vs B-site dopant concentration
-                    dopant_A_conc_filter = st.slider(
-                        label=f'{dopant_A} (at.%):',
-                        min_value=dopant_A_conc[0],
-                        max_value=dopant_A_conc[1],
-                        value=dopant_A_conc[0],
-                        step=1,
-                        key='dopant_A_conc_filter_for_atomic_A'
-                    )
-                    data_dis_filter = data_dis[data_dis['Dopant Concentration A (at.%)'] == dopant_A_conc_filter]
+                if dopant_A != 'None' and dopant_B != 'None':
+                    # Set 2 columns for A and B site dopant
+                    col11, col12 = st.columns(2, border=True, gap='medium')
+                    with col11:
+                        # Plot the atomic distortion vs B-site dopant concentration
+                        dopant_A_conc_filter = st.slider(
+                            label=f'{dopant_A} (at.%):',
+                            min_value=dopant_A_conc[0],
+                            max_value=dopant_A_conc[1],
+                            value=dopant_A_conc[0],
+                            step=1,
+                            key='dopant_A_conc_filter_for_atomic_A'
+                        )
+                        data_dis_filter = data_dis[data_dis['Dopant Concentration A (at.%)'] == dopant_A_conc_filter]
+                        fig = px.scatter(
+                            data_dis_filter,
+                            x='Dopant Concentration B (at.%)',
+                            y='Atomic Distortion (Å)',
+                            error_y='Atomic Distortion std (Å)',
+                        )
+                        fig.update_layout(
+                            xaxis_title=f'{dopant_B} (at.%)',
+                            yaxis_title='Atomic Distortion (Å)',
+                            
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                    
+                    with col12:
+                        # Plot the atomic distortion vs A-site dopant concentration
+                        dopant_B_conc_filter = st.slider(
+                            label=f'{dopant_B} (at.%):',
+                            min_value=dopant_B_conc[0],
+                            max_value=dopant_B_conc[1],
+                            value=dopant_B_conc[0],
+                            step=1,
+                            key='dopant_B_conc_filter_for_atomic_B'
+                        )
+                        data_dis_filter = data_dis[data_dis['Dopant Concentration B (at.%)'] == dopant_B_conc_filter]
+                        fig = px.scatter(
+                            data_dis_filter,
+                            x='Dopant Concentration A (at.%)',
+                            y='Atomic Distortion (Å)',
+                            error_y='Atomic Distortion std (Å)',
+                        )
+                        fig.update_layout(
+                            xaxis_title=f'{dopant_A} (at.%)',
+                            yaxis_title='Atomic Distortion (Å)',
+                            
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
 
+                elif dopant_A != 'None' and dopant_B == 'None':
                     fig = px.scatter(
-                        data_dis_filter,
-                        x='Dopant Concentration B (at.%)',
-                        y='Atomic Distortion (Å)',
-                        error_y='Atomic Distortion std (Å)',
-                    )
-                    fig.update_layout(
-                        xaxis_title=f'{dopant_B} (at.%)',
-                        yaxis_title='Atomic Distortion (Å)',
-                        
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-                
-                with col12:
-                    # Plot the atomic distortion vs A-site dopant concentration
-                    dopant_B_conc_filter = st.slider(
-                        label=f'{dopant_B} (at.%):',
-                        min_value=dopant_B_conc[0],
-                        max_value=dopant_B_conc[1],
-                        value=dopant_B_conc[0],
-                        step=1,
-                        key='dopant_B_conc_filter_for_atomic_B'
-                    )
-                    data_dis_filter = data_dis[data_dis['Dopant Concentration B (at.%)'] == dopant_B_conc_filter]
-
-                    fig = px.scatter(
-                        data_dis_filter,
+                        data_dis,
                         x='Dopant Concentration A (at.%)',
                         y='Atomic Distortion (Å)',
                         error_y='Atomic Distortion std (Å)',
                     )
                     fig.update_layout(
                         xaxis_title=f'{dopant_A} (at.%)',
+                        yaxis_title='Atomic Distortion (Å)',
+                        
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+
+                elif dopant_A == 'None' and dopant_B != 'None':
+                    fig = px.scatter(
+                        data_dis,
+                        x='Dopant Concentration B (at.%)',
+                        y='Atomic Distortion (Å)',
+                        error_y='Atomic Distortion std (Å)',
+                    )
+                    fig.update_layout(
+                        xaxis_title=f'{dopant_B} (at.%)',
                         yaxis_title='Atomic Distortion (Å)',
                         
                     )
@@ -631,12 +733,20 @@ def main():
         with col13:
             st.markdown('**Diffusion Coefficient (cm<sup>2</sup>/s):**', unsafe_allow_html=True)
             # Create a heatmap for D (cm^2/s)
-            heatmap_D = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='D (cm^2/s)')
+            if dopant_A != 'None' and dopant_B != 'None':
+                heatmap_D = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='D (cm^2/s)')
+                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='D (cm^2/s)')
+            elif dopant_A != 'None' and dopant_B == 'None':
+                heatmap_D = data_dis.pivot_table(index='Dopant Concentration B (at.%)', columns='Dopant Concentration A (at.%)', values='D (cm^2/s)')
+                labels=dict(x=f'{dopant_A} (at.%)', y='', color='D (cm^2/s)')
+            elif dopant_A == 'None' and dopant_B != 'None':
+                heatmap_D = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='D (cm^2/s)')
+                labels=dict(x=f'{dopant_B} (at.%)', y='', color='D (cm^2/s)')
             # Create the Plotly heatmap
             fig = px.imshow(
                 heatmap_D,
                 color_continuous_scale='Viridis',
-                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='D (cm^2/s)'),
+                labels=labels,
             )
             fig.update_coloraxes(
                 colorbar_tickformat='.2e',
@@ -647,12 +757,20 @@ def main():
         with col14:
             st.markdown('**Ionic Conductivity (S/cm):**')
             # Create a heatmap for C (S/cm)
-            heatmap_C = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='C (S/cm)')
+            if dopant_A != 'None' and dopant_B != 'None':
+                heatmap_C = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='C (S/cm)')
+                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='C (S/cm)')
+            elif dopant_A != 'None' and dopant_B == 'None':
+                heatmap_C = data_dis.pivot_table(index='Dopant Concentration B (at.%)', columns='Dopant Concentration A (at.%)', values='C (S/cm)')
+                labels=dict(x=f'{dopant_A} (at.%)', y='', color='C (S/cm)')
+            elif dopant_A == 'None' and dopant_B != 'None':
+                heatmap_C = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='C (S/cm)')
+                labels=dict(x=f'{dopant_B} (at.%)', y='', color='C (S/cm)')
             # Create the Plotly heatmap
             fig = px.imshow(
                 heatmap_C,
                 color_continuous_scale='Viridis',
-                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='C (S/cm)'),
+                labels=labels,
             )
             fig.update_coloraxes(
                 colorbar_tickformat='.2e',
