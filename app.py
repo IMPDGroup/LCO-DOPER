@@ -280,7 +280,7 @@ def main():
                     label=f'Please select the concentration of {dopant_A} (at.%):',
                     min_value=1,
                     max_value=100,
-                    value=(1, 10),
+                    value=(20, 80),
                     step=1,
                 )
             else:
@@ -309,7 +309,7 @@ def main():
                     label=f'Please select the concentration of {dopant_B} (at.%):',
                     min_value=1,
                     max_value=100,
-                    value=(1, 10),
+                    value=(20, 80),
                     step=1,
                 )
             else:
@@ -440,10 +440,10 @@ def main():
                     with col5:
                         # Plot the F (eV/atom) vs B-site dopant concentration
                         dopant_A_conc_filter = st.slider(
-                            label=f'{dopant_A} (at.%):',
+                            label=f'Adjust the Concentration of {dopant_A} (at.%):',
                             min_value=dopant_A_conc[0],
                             max_value=dopant_A_conc[1],
-                            value=dopant_A_conc[0],
+                            value=(dopant_A_conc[0] + dopant_A_conc[1]) // 2,
                             step=1,
                             key='dopant_A_conc_filter_for_F_A'
                         )
@@ -464,10 +464,10 @@ def main():
                     with col6:
                         # Plot the F (eV/atom) vs A-site dopant concentration
                         dopant_B_conc_filter = st.slider(
-                            label=f'{dopant_B} (at.%):',
+                            label=f'Adjust the Concentration of {dopant_B} (at.%):',
                             min_value=dopant_B_conc[0],
                             max_value=dopant_B_conc[1],
-                            value=dopant_B_conc[0],
+                            value=(dopant_B_conc[0] + dopant_B_conc[1]) // 2,
                             step=1,
                             key='dopant_B_conc_filter_for_F_B'
                         )
@@ -574,10 +574,10 @@ def main():
                     with col9:
                         # Plot the lattice distortion vs B-site dopant concentration
                         dopant_A_conc_filter = st.slider(
-                            label=f'{dopant_A} (at.%):',
+                            label=f'Adjust the Concentration of {dopant_A} (at.%):',
                             min_value=dopant_A_conc[0],
                             max_value=dopant_A_conc[1],
-                            value=dopant_A_conc[0],
+                            value=(dopant_A_conc[0] + dopant_A_conc[1]) // 2,
                             step=1,
                             key='dopant_A_conc_filter_for_lattice_A'
                         )
@@ -598,10 +598,10 @@ def main():
                     with col10:
                         # Plot the lattice distortion vs A-site dopant concentration
                         dopant_B_conc_filter = st.slider(
-                            label=f'{dopant_B} (at.%):',
+                            label=f'Adjust the Concentration of {dopant_B} (at.%):',
                             min_value=dopant_B_conc[0],
                             max_value=dopant_B_conc[1],
-                            value=dopant_B_conc[0],
+                            value=(dopant_B_conc[0] + dopant_B_conc[1]) // 2,
                             step=1,
                             key='dopant_B_conc_filter_for_lattice_B'
                         )
@@ -654,10 +654,10 @@ def main():
                     with col11:
                         # Plot the atomic distortion vs B-site dopant concentration
                         dopant_A_conc_filter = st.slider(
-                            label=f'{dopant_A} (at.%):',
+                            label=f'Adjust the Concentration of {dopant_A} (at.%):',
                             min_value=dopant_A_conc[0],
                             max_value=dopant_A_conc[1],
-                            value=dopant_A_conc[0],
+                            value=(dopant_A_conc[0] + dopant_A_conc[1]) // 2,
                             step=1,
                             key='dopant_A_conc_filter_for_atomic_A'
                         )
@@ -678,10 +678,10 @@ def main():
                     with col12:
                         # Plot the atomic distortion vs A-site dopant concentration
                         dopant_B_conc_filter = st.slider(
-                            label=f'{dopant_B} (at.%):',
+                            label=f'Adjust the Concentration of {dopant_B} (at.%):',
                             min_value=dopant_B_conc[0],
                             max_value=dopant_B_conc[1],
-                            value=dopant_B_conc[0],
+                            value=(dopant_B_conc[0] + dopant_B_conc[1]) // 2,
                             step=1,
                             key='dopant_B_conc_filter_for_atomic_B'
                         )
