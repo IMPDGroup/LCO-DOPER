@@ -433,7 +433,7 @@ def main():
             # Display in Streamlit
             st.plotly_chart(fig, use_container_width=True)
 
-            with st.expander('**Formation Energy Trends Across Dopant Sites** (Click to Expand)', expanded=False):
+            with st.expander('**Formation Energy Trends Across Different Dopant Sites** (Click to Expand)', expanded=False):
                 if dopant_A != 'None' and dopant_B != 'None':
                     # Set 2 columns for A and B site dopant
                     col5, col6 = st.columns(2, border=True, gap='medium')
@@ -567,7 +567,7 @@ def main():
                 # Display in Streamlit
                 st.plotly_chart(fig, use_container_width=True)
             
-            with st.expander('**Lattice Distortion Trends Across Dopant Sites** (Click to Expand)', expanded=False):
+            with st.expander('**Lattice Distortion Trends Across Different Dopant Sites** (Click to Expand)', expanded=False):
                 if dopant_A != 'None' and dopant_B != 'None':
                     # Set 2 columns for A and B site dopant
                     col9, col10 = st.columns(2, border=True, gap='medium')
@@ -647,7 +647,7 @@ def main():
                     )
                     st.plotly_chart(fig, use_container_width=True)
 
-            with st.expander('**Atomic Distortion Trends Across Dopant Sites** (Click to Expand)', expanded=False):
+            with st.expander('**Atomic Distortion Trends Across Different Dopant Sites** (Click to Expand)', expanded=False):
                 if dopant_A != 'None' and dopant_B != 'None':
                     # Set 2 columns for A and B site dopant
                     col11, col12 = st.columns(2, border=True, gap='medium')
