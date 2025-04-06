@@ -21,17 +21,17 @@ An application for analyzing dopant effects on LaCoO3 (LCO), supporting composit
 
     <div align=left><img src='./res/dopants_table.jpg' alt='' width=''/></div>
 
-2. **Select System Conditions**: In the `System Conditions` section, specify the oxygen vacancy concentration (at.%) and the temperature (K) for the simulation. The temperature range is from 1000 K to 2500 K. The oxygen vacancy concentration ranges from 0 at.% to 5 at.%.
+2. **Select System Conditions**: In the `System Conditions` section, specify the oxygen vacancy concentration (at.%) and the temperature (K) for the simulation. The temperature range is from 1000 K to 2500 K. The oxygen vacancy concentration ranges from 0 at.% to 5 at.%. Note that these settings only apply to diffusivity and conductivity predictions.
 
-3. **Predict**: Click the `Predict` button to initiate the prediction process. The system will analyze the selected dopants and conditions, and provide predictions for the following properties:
-    - Formation Energy (eV/atom)
-    - Diffusion Coefficient (cm²/s)
-    - Lattice Distortion (%)
-    - Atomic Distance (Å)
-
-4. **Display & Download Results**: After the prediction is complete, you can see the results by checking the `Show Predicted Data` checkbox. A table will appear with the predicted properties for the selected dopants and conditions. You can also download the results in CSV format by clicking the `Download Predicted Data` button.
-
-5. **Visualize Results**: The predicted results will be displayed in the `Predicted Data Visualization:` section, where you can visualize the predicted properties with interactive plots. The plots will show the relationship between the selected dopants, their concentrations, and the predicted properties.
+3. **Predict**: Click the `Predict` button to initiate the prediction process. The system will analyze the selected dopants and conditions, and provide and visualize the prediction results for the following properties:
+    - Energetic Stability
+      - Formation Energy (eV/atom)
+    - Structural Distortions
+      - Lattice Distortion (%)
+      - Atomic Distance (Å)
+    - Diffusivity & Conductivity
+      - Diffusion Coefficient (cm²/s)
+      - Conductivity (S/cm)
 
 ## Cite Us
 If you use this code in your research, please cite our paper:
