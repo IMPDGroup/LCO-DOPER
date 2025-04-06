@@ -21,7 +21,7 @@ An application for analyzing dopant effects on LaCoO3 (LCO), supporting composit
 
     <div align=left><img src='./res/dopants_table.jpg' alt='' width=''/></div>
 
-2. **Select System Conditions**: In the `System Conditions` section, specify the oxygen vacancy concentration (at.%) and the temperature (K) for the simulation. The temperature range is from 1000 K to 2500 K. The oxygen vacancy concentration ranges from 0 at.% to 5 at.%. Note that these settings only apply to diffusivity and conductivity predictions.
+2. **Select System Conditions**: In the `System Conditions` section, specify the oxygen vacancy concentration (at.%) and the temperature (K) for the simulation. The temperature range is from 500 K to 2500 K. The oxygen vacancy concentration ranges from 0 at.% to 5 at.%. Note that these settings only apply to diffusivity and conductivity predictions.
 
 3. **Predict**: Click the `Predict` button to initiate the prediction process. The system will analyze the selected dopants and conditions, and provide and visualize the prediction results for the following properties:
     - Energetic Stability
