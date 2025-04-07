@@ -410,28 +410,31 @@ def main():
         # Visualize the forming energy
         st.divider()
         st.subheader('Energetic Stability:')
-        # Create a heatmap for F (eV/atom)
-        if dopant_A != 'None' and dopant_B != 'None':
-            heatmap_F = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='F (eV/atom)')
-            labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='F (eV/atom)')
-        elif dopant_A != 'None' and dopant_B == 'None':
-            heatmap_F = data_dis.pivot_table(index='Dopant Concentration B (at.%)', columns='Dopant Concentration A (at.%)', values='F (eV/atom)')
-            labels=dict(x=f'{dopant_A} (at.%)', y='', color='F (eV/atom)')
-        elif dopant_A == 'None' and dopant_B != 'None':
-            heatmap_F = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='F (eV/atom)')
-            labels=dict(x=f'{dopant_B} (at.%)', y='', color='F (eV/atom)')
-        # Create the Plotly heatmap
-        fig = px.imshow(
-            heatmap_F,
-            color_continuous_scale='Viridis',
-            labels=labels,
-        )
-        fig.update_coloraxes(
-            colorbar_tickformat='.2f',
-            colorbar_title_text='',
-        )
-        # Display in Streamlit
-        st.plotly_chart(fig, use_container_width=True)
+        with st.container(border=True):
+            st.markdown('**Formation Energy (eV/atom):**')
+            # Create a heatmap for F (eV/atom)
+            if dopant_A != 'None' and dopant_B != 'None':
+                heatmap_F = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='F (eV/atom)')
+                labels=dict(x=f'{dopant_B} (at.%)', y=f'{dopant_A} (at.%)', color='F (eV/atom)')
+            elif dopant_A != 'None' and dopant_B == 'None':
+                heatmap_F = data_dis.pivot_table(index='Dopant Concentration B (at.%)', columns='Dopant Concentration A (at.%)', values='F (eV/atom)')
+                labels=dict(x=f'{dopant_A} (at.%)', y='', color='F (eV/atom)')
+            elif dopant_A == 'None' and dopant_B != 'None':
+                heatmap_F = data_dis.pivot_table(index='Dopant Concentration A (at.%)', columns='Dopant Concentration B (at.%)', values='F (eV/atom)')
+                labels=dict(x=f'{dopant_B} (at.%)', y='', color='F (eV/atom)')
+            # Create the Plotly heatmap
+            fig = px.imshow(
+                heatmap_F,
+                color_continuous_scale='Viridis',
+                labels=labels,
+            )
+            fig.update_coloraxes(
+                colorbar_tickformat='.2f',
+                colorbar_title_text='',
+            )
+            # Display in Streamlit
+            st.plotly_chart(fig, use_container_width=True)
+        
         with st.expander('**Formation Energy Trends Across Different Dopant Sites** (Click to Expand)', expanded=False):
             if dopant_A != 'None' and dopant_B != 'None':
                 # Set 2 columns for A and B site dopant
