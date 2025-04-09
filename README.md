@@ -11,9 +11,9 @@ An application for analyzing dopant effects on LaCoO3 (LCO), supporting composit
 
 * 🌐 [Try it Online](https://lco-doper.streamlit.app/)
 
-* For any questions or suggestions, please contact us (gliu4@wpi.edu; yzhong@wpi.edu).
+* ⭐️ Please STAR this repository if you find it helpful :)
 
-* Please STAR  ⭐️ this repository if you find it helpful :)
+* For any questions or suggestions, please contact us (gliu4@wpi.edu; yzhong@wpi.edu).
 
 ## Usage Description
 
