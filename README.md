@@ -1,7 +1,7 @@
 # Unraveling Doping Effects in LaCoO3 via Machine Learning-Accelerated First-Principles Simulations
 
 
-<!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1234567.svg)](https://doi.org/10.5281/zenodo.1234567) -->
+[![DOI](https://zenodo.org/badge/DOI/xxx.xxx/xxx.xxx.svg)](https://doi.org/xxx.xxx/xxx.xxx)
 
 ## Overview
 
@@ -11,9 +11,11 @@ An application for analyzing dopant effects on LaCoO3 (LCO), supporting composit
 
 * 🌐 [Try it Online](https://lco-doper.streamlit.app/)
 
-* For any questions or suggestions, please contact us (gliu4@wpi.edu; yzhong@wpi.edu). Please STAR  ⭐️ this repository if you find it helpful :)
+* For any questions or suggestions, please contact us (gliu4@wpi.edu; yzhong@wpi.edu).
 
-### Usage Description
+* Please STAR  ⭐️ this repository if you find it helpful :)
+
+## Usage Description
 
 1. **Select Dopants and Concentration**: In the `Dopants Selection` section, choose the desired dopants and their concentrations (at.%) for both A and B sites in the LCO structure. Supported dopants include:
     - A-site: Mg, Ca, Sr, Ba, Ce, Pr, Nd, Sm, Gd
