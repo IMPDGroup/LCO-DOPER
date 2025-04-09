@@ -239,7 +239,7 @@ def main():
         'Report a bug': 'mailto:gliu4@wpi.edu',
         'About': '# LCO-DOPER'
         '\n**AI Powered Materials Innovation**  '
-        '\n\n*Developed by Guangchen Liu (gliu4@wpi.edu)*  '
+        '\n\n*Developed by Guangchen Liu*  '
         '\n*IMPD Group, Worcester Polytechnic Institute, MA USA*',
     })
     
@@ -249,10 +249,16 @@ def main():
     st.sidebar.title('LCO-DOPER  [![GitHub stars](https://img.shields.io/github/stars/aguang5241/LCO-DOPER?style=social)](https://github.com/aguang5241/LCO-DOPER)')
     # Add a description to the sidebar
     st.sidebar.markdown('An application for analyzing dopant effects on LaCoO<sub>3</sub> (LCO), supporting composition optimization and material performance enhancement.', unsafe_allow_html=True)
-    # Add contact information: gliu4@wpi.edu
+    # Add a citation link to the sidebar
     st.sidebar.divider()
+    st.sidebar.markdown('If you find this application useful, please consider citing our publication:')
+    st.sidebar.markdown('[![DOI](https://img.shields.io/badge/DOI-xx.xxx/xxx--xxx--xxx--xxx-white?logo=doi&logoColor=white)](https://doi.org/)')
+    # Add contact information: gliu4@wpi.edu
+    # st.sidebar.divider()
     st.sidebar.markdown('For any questions or suggestions, please contact:')
-    st.sidebar.markdown('[![Email](https://img.shields.io/badge/Email-yzhong@wpi.edu-white?logo=mail.ru&logoColor=white)](mailto:yzhong@wpi.edu) [![Email](https://img.shields.io/badge/Email-gliu4@wpi.edu-white?logo=mail.ru&logoColor=white)](mailto:gliu4@wpi.edu)')
+    st.sidebar.markdown('[![Email](https://img.shields.io/badge/Email-yzhong@wpi.edu-white?logo=mail.ru&logoColor=white)](mailto:yzhong@wpi.edu)')
+    st.sidebar.markdown('[![Email](https://img.shields.io/badge/Email-gliu4@wpi.edu-white?logo=mail.ru&logoColor=white)](mailto:gliu4@wpi.edu)')
+    st.sidebar.markdown('[![LinkedIn](https://img.shields.io/badge/LinkedIn-Guangchen%20Liu-white?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/aguang5241)')
     
     # Add a title to the main page
     st.title('LCO-DOPER  [![GitHub stars](https://img.shields.io/github/stars/aguang5241/LCO-DOPER?style=social)](https://github.com/aguang5241/LCO-DOPER)')
