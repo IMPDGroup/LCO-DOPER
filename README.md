@@ -13,7 +13,7 @@ An application for analyzing dopant effects on LaCoO3 (LCO), supporting composit
 
 * ⭐️ Please STAR this repository if you find it helpful :)
 
-* For any questions or suggestions, please contact us (gliu4@wpi.edu; yzhong@wpi.edu).
+* ✉️ Please contact us (gliu4@wpi.edu; yzhong@wpi.edu) for any questions or suggestions.
 
 ## Usage Description
 
